@@ -103,13 +103,20 @@ body { padding-bottom: 26px; }
 .nr-ding .unlock { font-size: 12px; color: var(--accent); margin-top: 13px; }
 @keyframes nrfade { 0%, 75% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
 
-/* ===== Desktop / laptop layout (D39 — same app, wide screen) ===== */
+/* ===== Desktop / laptop layout (D39 — same app, wide screen) =====
+   #appShell here used to hardcode max-width:860px. As an ID selector it always beat
+   .app-shell's width rule in styles.css on specificity, no matter which file loaded
+   later — so the shell never actually widened past 760px and this whole block was
+   fighting itself. styles.css (min-width:900px) is now the single source of truth
+   for the shell's width (1040px); this block only handles addon-specific content
+   that needs its own width, and matches that same number so nothing re-clamps it. */
 @media (min-width: 900px) {
-  #appShell { max-width: 860px; margin: 0 auto; }
-  .nrd-q textarea { min-height: 110px; font-size: 15px; }
+  #appShell { max-width: 1040px; margin: 0 auto; }
+  .nrd-q textarea { min-height: 170px; font-size: 15.5px; line-height: 1.5; }
   .nrg-abilities { grid-template-columns: repeat(10, 1fr); }
   .nrk-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
-  .nr-xpzone { max-width: 860px; margin: 0 auto; }
+  .nr-xpzone { max-width: 1040px; margin: 0 auto; }
+  #nrDiaryFlow { max-width: 760px; margin: 0 auto; }
 }
 
 /* ===== Companion chat ===== */

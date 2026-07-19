@@ -503,6 +503,40 @@ dialog::backdrop { background: rgba(2,4,8,.8); backdrop-filter: blur(6px); }
   .metric-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
+/* ---- Desktop / laptop (P2.2, D39): same app, wide screen, no separate build ----
+   NOTE: this is the single source of truth for .app-shell's desktop width. addons.css
+   used to fight this with an #appShell{max-width:860px} rule that (being an ID
+   selector) always won on specificity over .app-shell here regardless of load order,
+   so desktop never actually widened. That rule now mirrors this file's value instead
+   of setting its own — keep the two in sync if this number changes. */
+@media (min-width: 900px) {
+  .app-shell { width: min(100%, 1040px); padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+  .app-content { padding-inline: 34px; }
+  .app-header { padding-inline: 34px; }
+
+  /* grids get real columns instead of one lonely stretched card per row */
+  .stat-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .anchor-streak-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .technique-grid { grid-template-columns: repeat(3, 1fr); }
+  .goal-list { grid-template-columns: repeat(2, 1fr); }
+  .cue-list { grid-template-columns: repeat(2, 1fr); }
+
+  /* the hero + hardest-to-read single-column content stay at a comfortable reading
+     width even though the shell is wide, instead of stretching lines edge to edge */
+  .next-card, .review-panel, .plan-intro, .support-notes-panel { max-width: 760px; }
+  .progress-hero { max-width: 760px; }
+
+  /* bottom nav becomes a small floating dock instead of a bar stretched to 1040px */
+  .bottom-nav {
+    width: auto;
+    min-width: 420px;
+    border-radius: 20px;
+    bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+}
+
 @media (max-width: 520px) {
   .goal-form { grid-template-columns: 1fr; }
   .goal-form button { width: 100%; }
