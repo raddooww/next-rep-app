@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <meta name="description" content="Next Rep — one useful action, visible proof, safe restart.">
+  <title>Next Rep</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="addons.css?v=1">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <div class="app-shell" id="appShell">
+    <header class="app-header">
+      <button class="brand-mark" type="button" data-nav="today" aria-label="Go to Today">NR</button>
+      <div class="header-copy">
+        <p class="eyebrow" id="todayLabel"></p>
+        <h1 id="viewTitle">Today</h1>
+      </div>
+      <div class="header-actions">
+        <button class="round-button" id="lockButton" type="button" aria-label="Lock app" hidden>⌁</button>
+        <button class="round-button danger-ring" id="quickCircuitButton" type="button" aria-label="Open circuit breaker">⚡</button>
+      </div>
+    </header>
+
+    <main class="app-content">
+      <section class="app-view active" id="view-today" data-view="today">
+        <button class="nre-btn" id="nrEmergencyBtn" type="button">⬤ BAD MOMENT — TAP HERE</button>
+        <article class="next-card electric-border" id="nextCard">
+          <div class="next-topline">
+            <span class="live-dot"></span>
+            <span id="nextCategory">NEXT REP</span>
+            <button class="mode-chip" id="minimumModeButton" type="button">Standard</button>
+          </div>
+          <div class="next-content">
+            <div>
+              <p class="next-overline" id="nextOverline">Start before the plan feels perfect</p>
+              <h2 id="nextTitle">Loading your next action…</h2>
+              <p id="nextDescription"></p>
+            </div>
+            <button class="launch-button" id="startNextButton" type="button" aria-label="Start next repetition">▶</button>
+          </div>
+          <div class="next-footer">
+            <span id="nextDuration">5 MIN</span>
+            <span id="todayProgressText">0 of 3 complete</span>
+          </div>
+        </article>
+
+        <div class="token-pips-row" id="tokenPipsRow"></div>
+
+        <div class="section-title-row">
+          <div>
+            <p class="eyebrow">Daily anchors</p>
+            <h2>Three signals</h2>
+          </div>
+          <button class="text-button" id="anchorDisplayButton" type="button">Details</button>
+        </div>
+        <div class="anchor-stack" id="anchorList"></div>
+
+        <div class="section-title-row task-heading">
+          <div>
+            <p class="eyebrow">One-time actions</p>
+            <h2>Today’s tasks</h2>
+          </div>
+          <button class="small-electric-button" id="addTaskButton" type="button">＋ Add</button>
+        </div>
+        <div class="task-list" id="todayTaskList"></div>
+        <button class="quiet-button full" id="showTaskBacklogButton" type="button">Open task backlog</button>
+
+        <details class="memory-panel" id="memoryPanel">
+          <summary>
+            <span><span class="memory-icon">⌁</span> Save the mental thread</span>
+            <span class="saved-status" id="checkpointStatus">Not saved</span>
+          </summary>
+          <p class="panel-explainer">Leave yourself a path back before changing tabs, rooms or tasks.</p>
+          <label class="field-label" for="currentGoal">I am doing</label>
+          <input class="text-input" id="currentGoal" maxlength="100" placeholder="The current task">
+          <label class="field-label" for="nextAction">Next visible action</label>
+          <input class="text-input" id="nextAction" maxlength="140" placeholder="Something concrete and small">
+          <label class="field-label" for="neededInfo">I still need</label>
+          <input class="text-input" id="neededInfo" maxlength="140" placeholder="Optional information, link or answer">
+          <div class="button-row">
+            <button class="primary-button" id="saveCheckpointButton" type="button">Save thread</button>
+            <button class="secondary-button" id="finishCheckpointButton" type="button">Finished · clear</button>
+          </div>
+        </details>
+
+        <article class="capture-panel">
+          <div>
+            <p class="eyebrow">Do not switch tasks</p>
+            <h3>Park an open loop</h3>
+          </div>
+          <div class="capture-row">
+            <input class="text-input" id="openLoopInput" maxlength="140" placeholder="Capture it without following it">
+            <button class="secondary-button" id="captureLoopButton" type="button">Park</button>
+          </div>
+          <ul class="loop-list" id="loopList"></ul>
+        </article>
+
+        <button class="circuit-banner" id="todayCircuitButton" type="button">
+          <span class="circuit-icon">⚡</span>
+          <span><strong>Anti-relapse circuit breaker</strong><small>Interrupt an urge before it chooses for you</small></span>
+          <span>›</span>
+        </button>
+      </section>
+
+      <section class="app-view" id="view-progress" data-view="progress" hidden>
+        <div id="nrGamify" class="settings-group">
+          <p class="eyebrow">Character</p>
+          <div class="nrg-stats"></div>
+          <p class="eyebrow">Achievements</p>
+          <div class="nrg-achs"></div>
+          <p class="eyebrow">Abilities — new toys, unlocked by leveling (never health techniques)</p>
+          <div class="nrg-abilities"></div>
+        </div>
+        <div class="progress-hero">
+          <div class="progress-ring" id="weeklyRing"><span id="weeklyPercent">0%</span><small>THIS WEEK</small></div>
+          <div>
+            <p class="eyebrow">Visible proof</p>
+            <h2>Your evidence compounds.</h2>
+            <p id="progressSummary">Start with one honest repetition.</p>
+          </div>
+        </div>
+
+        <div class="stat-grid" id="statGrid"></div>
+
+        <div class="section-title-row">
+          <div><p class="eyebrow">Last seven days</p><h2>Anchor signals</h2></div>
+        </div>
+        <div class="week-matrix" id="weekMatrix"></div>
+
+        <div class="section-title-row">
+          <div><p class="eyebrow">Per anchor</p><h2>Weekly score, streaks &amp; recoveries</h2></div>
+        </div>
+        <div class="anchor-streak-grid" id="anchorStreakGrid"></div>
+
+        <div class="section-title-row">
+          <div><p class="eyebrow">Measurements</p><h2>Personal metrics</h2></div>
+          <button class="small-electric-button" id="addMeasurementButton" type="button">＋ Record</button>
+        </div>
+        <div class="metric-grid" id="metricGrid"></div>
+
+        <article class="review-panel">
+          <p class="eyebrow">Weekly reflection</p>
+          <h2>What actually moved?</h2>
+          <textarea class="text-area" id="weeklyReview" rows="4" maxlength="600" placeholder="What improved? What blocked you? What should be easier next week?"></textarea>
+          <button class="secondary-button full" id="saveWeeklyReviewButton" type="button">Save weekly review</button>
+        </article>
+
+        <article class="review-panel" id="nrDigestPanel">
+          <p class="eyebrow">AI weekly digest (D41)</p>
+          <h2>The week, witnessed.</h2>
+          <p class="settings-note">Assembles this week's real evidence — anchors, restarts, diary, level — into one review. Live with a key; otherwise copied for pasting into Claude.</p>
+          <div id="nrDigestOut"></div>
+          <div class="button-column">
+            <button class="secondary-button full" id="nrDigestRun" type="button">Generate weekly digest</button>
+            <button class="secondary-button full" id="nrDigestPaste" type="button">Paste digest reply</button>
+            <button class="secondary-button full" id="nrDigestDownload" type="button">Download latest as .md</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="app-view" id="view-plan" data-view="plan" hidden>
+        <article class="plan-intro electric-border">
+          <p class="eyebrow">External plan</p>
+          <h2>Fewer active fronts. Clear next actions.</h2>
+          <p>Plans exist to make starting easier—not to postpone it.</p>
+        </article>
+
+        <div class="section-title-row">
+          <div><p class="eyebrow">Active direction</p><h2>Goals</h2></div>
+        </div>
+        <form class="goal-form" id="goalForm">
+          <input class="text-input" id="goalTitleInput" maxlength="100" placeholder="Goal">
+          <input class="text-input" id="goalNextInput" maxlength="140" placeholder="Next visible action">
+          <button class="primary-button" type="submit">Add goal</button>
+        </form>
+        <div class="goal-list" id="goalList"></div>
+
+        <div class="section-title-row">
+          <div><p class="eyebrow">All one-time actions</p><h2>Task backlog</h2></div>
+          <button class="small-electric-button" id="planAddTaskButton" type="button">＋ Add</button>
+        </div>
+        <div class="filter-row" id="taskFilters">
+          <button class="filter-chip active" data-filter="open" type="button">Open</button>
+          <button class="filter-chip" data-filter="done" type="button">Done</button>
+          <button class="filter-chip" data-filter="all" type="button">All</button>
+        </div>
+        <div class="task-list" id="backlogTaskList"></div>
+      </section>
+
+      <section class="app-view" id="view-support" data-view="support" hidden>
+        <div id="nrKnowledge" class="settings-group">
+          <button class="nrk-lang" type="button">EN → SK</button>
+          <p class="eyebrow">Knowledge library</p>
+          <h2>Techniques</h2>
+          <input class="nrk-search" id="nrkSearch" placeholder="⌕ search / hľadaj" autocomplete="off">
+          <div class="nrk-chips"></div>
+          <div class="nrk-list"></div>
+        </div>
+        <button class="support-emergency" id="supportCircuitButton" type="button">
+          <span>⚡</span>
+          <span><strong>Start Circuit Breaker</strong><small>Gaming · alcohol · THC · medication · other</small></span>
+          <span>›</span>
+        </button>
+
+        <div class="section-title-row">
+          <div><p class="eyebrow">Use what you learned</p><h2>Technique library</h2></div>
+        </div>
+        <div class="technique-grid" id="techniqueGrid"></div>
+
+        <article class="challenge-panel">
+          <div class="challenge-art">⚔</div>
+          <div>
+            <p class="eyebrow">Experimental · opt-in</p>
+            <h2>Adversarial Fuel Chamber</h2>
+            <p>Use one chosen doubt cue as a boss fight. Leaving is always allowed; action earns the victory.</p>
+          </div>
+          <button class="secondary-button" id="openChallengeButton" type="button">Configure Spite Mode</button>
+        </article>
+
+        <article class="support-notes-panel">
+          <p class="eyebrow">Private notes</p>
+          <h2>What should I remember next time?</h2>
+          <textarea class="text-area" id="supportNote" rows="4" maxlength="600" placeholder="A useful realization, trigger or therapist instruction"></textarea>
+          <button class="secondary-button full" id="saveSupportNoteButton" type="button">Save support note</button>
+        </article>
+
+        <button class="quiet-button full" id="openSafetyButton" type="button">Open immediate safety contacts</button>
+      </section>
+
+      <section class="app-view" id="view-diary" data-view="diary" hidden>
+        <div class="nrd-modes">
+          <button class="nrd-mode" data-mode="morning" type="button">MORNING</button>
+          <button class="nrd-mode" data-mode="evening" type="button">EVENING</button>
+          <button class="nrd-mode" data-mode="history" type="button">LOG</button>
+        </div>
+        <div id="nrDiaryFlow"></div>
+      </section>
+
+      <section class="app-view" id="view-chat" data-view="chat" hidden>
+        <div id="nrCompanion">
+          <div class="nrc-personas"></div>
+          <div class="nrc-thread" id="nrcThread"></div>
+          <div class="nrc-inputrow">
+            <textarea id="nrcInput" rows="2" placeholder="Say it like it is…"></textarea>
+            <button class="nrc-send" id="nrcSend" type="button">➤</button>
+          </div>
+          <div class="nrc-toolrow">
+            <button class="secondary-button" id="nrcPasteReply" type="button">↩ paste reply</button>
+            <button class="secondary-button" id="nrcClear" type="button">clear thread</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="app-view" id="view-settings" data-view="settings" hidden>
+        <div class="settings-group">
+          <p class="eyebrow">Appearance</p>
+          <h2>Electric Calm</h2>
+          <div class="accent-options" id="accentOptions">
+            <button class="accent-swatch cyan active" data-accent="#50e6ff" type="button" aria-label="Cyan accent"></button>
+            <button class="accent-swatch violet" data-accent="#a78bfa" type="button" aria-label="Violet accent"></button>
+            <button class="accent-swatch green" data-accent="#70f0b0" type="button" aria-label="Green accent"></button>
+            <button class="accent-swatch orange" data-accent="#ff9f5a" type="button" aria-label="Orange accent"></button>
+          </div>
+          <label class="toggle-row"><span><strong>Reaction moments</strong><small>Short local celebrations after real action</small></span><input id="reactionToggle" type="checkbox" checked></label>
+          <label class="toggle-row"><span><strong>Posture baseline photo</strong><small>Show your private photo behind the Body card</small></span><input id="posturePhotoToggle" type="checkbox" checked></label>
+          <label class="toggle-row"><span><strong>Minimum mode by default</strong><small>Use the smallest viable repetitions</small></span><input id="defaultMinimumToggle" type="checkbox"></label>
+        </div>
+
+        <div class="settings-group">
+          <p class="eyebrow">Privacy</p>
+          <h2>Local protection</h2>
+          <p class="settings-note">This web-core preview can provide a casual PIN screen. Biometric unlock and encrypted Android storage are added during native packaging.</p>
+          <label class="toggle-row"><span><strong>Privacy screen</strong><small>Lock when the app goes to the background</small></span><input id="privacyToggle" type="checkbox"></label>
+          <button class="secondary-button full" id="setPinButton" type="button">Set or change PIN</button>
+        </div>
+
+        <div class="settings-group">
+          <p class="eyebrow">Reaction Pack</p>
+          <h2>Memes, faces and recordings</h2>
+          <p class="settings-note">Custom local media import will be enabled in the native build. No personal photo needs to leave the device for a reaction.</p>
+          <button class="secondary-button full" id="previewReactionButton" type="button">Preview a reaction</button>
+        </div>
+
+        <div class="settings-group" id="nrAiSettings">
+          <p class="eyebrow">AI</p>
+          <h2>Reflection engine</h2>
+          <p class="settings-note" id="nrAiStatus"></p>
+          <label class="toggle-row"><span><strong>Model</strong></span><input id="nrAiModel" type="text" style="max-width:220px"></label>
+          <label class="toggle-row"><span><strong>API key</strong><small>Enter ONLY after the 2026-07-13 reinstall</small></span><input id="nrAiKey" type="password" style="max-width:220px" autocomplete="off"></label>
+          <label class="toggle-row"><span><strong>Monthly cost ceiling (€)</strong></span><input id="nrAiCeiling" type="number" min="1" style="max-width:80px"></label>
+          <button class="secondary-button full" id="nrAiSave" type="button">Save AI settings</button>
+        </div>
+
+        <div class="settings-group" id="nrSyncSettings">
+          <p class="eyebrow">CLOUD SYNC</p>
+          <h2>Encrypted sync (Supabase)</h2>
+          <p class="settings-note" id="nrSyncStatus"></p>
+          <label class="toggle-row"><span><strong>Project URL</strong><small>https://xxxx.supabase.co</small></span><input id="nrSyncUrl" type="text" style="max-width:220px" autocomplete="off"></label>
+          <label class="toggle-row"><span><strong>Anon key</strong></span><input id="nrSyncAnon" type="password" style="max-width:220px" autocomplete="off"></label>
+          <label class="toggle-row"><span><strong>Email</strong></span><input id="nrSyncEmail" type="text" style="max-width:220px" autocomplete="off"></label>
+          <label class="toggle-row"><span><strong>Password</strong><small>used once to sign in, never stored</small></span><input id="nrSyncPw" type="password" style="max-width:220px" autocomplete="off"></label>
+          <label class="toggle-row"><span><strong>Encryption passphrase</strong><small>same on every device — cloud never sees plaintext</small></span><input id="nrSyncPass2" type="password" style="max-width:220px" autocomplete="off"></label>
+          <div class="button-column">
+            <button class="secondary-button full" id="nrSyncConnect" type="button">Connect &amp; sync</button>
+            <button class="secondary-button full" id="nrSyncNow" type="button">Sync now</button>
+            <button class="secondary-button full" id="nrSyncOff" type="button">Disconnect (keep local data)</button>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <p class="eyebrow">Your data</p>
+          <h2>Backup and portability</h2>
+          <div class="button-column">
+            <button class="secondary-button full" id="exportButton" type="button">Export local backup</button>
+            <label class="secondary-button full file-button">Import backup<input id="importInput" type="file" accept="application/json"></label>
+            <button class="danger-button full" id="resetButton" type="button">Reset local app data</button>
+          </div>
+        </div>
+
+        <div class="version-card">
+          <span>Next Rep</span><strong>Android MVP · web core 0.3</strong>
+          <small>Supports daily function and care. Does not diagnose, prescribe or replace emergency help.</small>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-nav="today" type="button"><span>⌂</span><small>Today</small></button>
+      <button class="nav-item" data-nav="diary" type="button"><span>✎</span><small>Diary</small></button>
+      <button class="nav-item" data-nav="chat" type="button"><span>◈</span><small>Chat</small></button>
+      <button class="nav-item" data-nav="progress" type="button"><span>⌁</span><small>Progress</small></button>
+      <button class="nav-item" data-nav="plan" type="button"><span>☷</span><small>Plan</small></button>
+      <button class="nav-item" data-nav="support" type="button"><span>◇</span><small>Support</small></button>
+      <button class="nav-item" data-nav="settings" type="button"><span>⚙</span><small>Settings</small></button>
+    </nav>
+  </div>
+
+  <div class="privacy-curtain" id="privacyCurtain" hidden>
+    <div class="lock-mark">NR</div>
+    <p class="eyebrow">Private space</p>
+    <h2>Next Rep is locked</h2>
+    <input class="pin-input" id="unlockPin" type="password" inputmode="numeric" maxlength="8" placeholder="PIN" autocomplete="off">
+    <button class="primary-button" id="unlockButton" type="button">Unlock</button>
+    <p class="form-status" id="unlockStatus"></p>
+  </div>
+
+  <dialog id="repDialog">
+    <form method="dialog" class="dialog-card timer-card">
+      <button class="dialog-close" value="cancel" aria-label="Close">×</button>
+      <div class="dialog-symbol" id="repDialogIcon">◉</div>
+      <p class="eyebrow" id="repDialogCategory"></p>
+      <h2 id="repDialogTitle"></h2>
+      <p id="repDialogDescription"></p>
+      <div class="timer-display" id="repTimerDisplay">05:00</div>
+      <div class="button-row">
+        <button class="secondary-button" id="pauseRepTimerButton" type="button">Pause</button>
+        <button class="primary-button" id="completeRepButton" type="button">Complete rep</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="taskDialog">
+    <form class="dialog-card" id="taskForm">
+      <button class="dialog-close" type="button" data-close="taskDialog" aria-label="Close">×</button>
+      <p class="eyebrow">One-time action</p>
+      <h2 id="taskDialogTitle">Add task</h2>
+      <input type="hidden" id="taskIdInput">
+      <label class="field-label" for="taskTitleInput">Task</label>
+      <input class="text-input" id="taskTitleInput" maxlength="120" required placeholder="Call the dentist">
+      <div class="two-column-fields">
+        <label class="field-label">Due date<input class="text-input" id="taskDueInput" type="date"></label>
+        <label class="field-label">Category<select class="text-input" id="taskCategoryInput"><option>Life</option><option>Work</option><option>Health</option><option>Home</option><option>Social</option></select></label>
+      </div>
+      <label class="field-label" for="taskNotesInput">Notes</label>
+      <textarea class="text-area" id="taskNotesInput" rows="3" maxlength="400" placeholder="Optional details"></textarea>
+      <label class="toggle-row inset"><span><strong>Important</strong><small>Keep it visually prominent</small></span><input id="taskImportantInput" type="checkbox"></label>
+      <label class="field-label">Completion check<select class="text-input" id="taskProofInput"><option value="manual">Manual check</option><option value="requested">Offer AI proof</option><option value="strict">Strict proof</option></select></label>
+      <label class="field-label" for="taskProofRuleInput">Evidence rule</label>
+      <input class="text-input" id="taskProofRuleInput" maxlength="180" placeholder="Example: submission confirmation showing employer and role">
+      <div class="button-row">
+        <button class="danger-button" id="deleteTaskButton" type="button" hidden>Delete</button>
+        <button class="primary-button" type="submit">Save task</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="measurementDialog">
+    <form class="dialog-card" id="measurementForm">
+      <button class="dialog-close" type="button" data-close="measurementDialog" aria-label="Close">×</button>
+      <p class="eyebrow">Personal metric</p>
+      <h2>Record measurement</h2>
+      <label class="field-label">Metric<select class="text-input" id="metricSelect"></select></label>
+      <div class="two-column-fields">
+        <label class="field-label">Value<input class="text-input" id="metricValueInput" type="number" step="0.1" required></label>
+        <label class="field-label">Date<input class="text-input" id="metricDateInput" type="date" required></label>
+      </div>
+      <label class="field-label">Note<input class="text-input" id="metricNoteInput" maxlength="160" placeholder="Optional measurement conditions"></label>
+      <button class="primary-button full" type="submit">Save measurement</button>
+    </form>
+  </dialog>
+
+  <dialog id="techniqueDialog">
+    <div class="dialog-card technique-dialog-card">
+      <button class="dialog-close" type="button" data-close="techniqueDialog" aria-label="Close">×</button>
+      <div class="dialog-symbol" id="techniqueIcon">◇</div>
+      <p class="eyebrow" id="techniqueCategory"></p>
+      <h2 id="techniqueTitle"></h2>
+      <p id="techniquePurpose"></p>
+      <ol class="technique-steps" id="techniqueSteps"></ol>
+      <div class="timer-display compact" id="techniqueTimer">05:00</div>
+      <button class="primary-button full" id="startTechniqueButton" type="button">Start guided timer</button>
+      <div class="technique-review" id="techniqueReview" hidden>
+        <div class="two-column-fields">
+          <label class="field-label">Intensity before<input class="text-input" id="techBefore" type="number" min="0" max="10" value="5"></label>
+          <label class="field-label">After<input class="text-input" id="techAfter" type="number" min="0" max="10" value="5"></label>
+        </div>
+        <label class="field-label">What did you notice?<textarea class="text-area" id="techNote" rows="3" maxlength="500"></textarea></label>
+        <button class="secondary-button full" id="saveTechniqueReviewButton" type="button">Save review</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="circuitDialog">
+    <div class="dialog-card circuit-dialog-card">
+      <button class="dialog-close" type="button" data-close="circuitDialog" aria-label="Close">×</button>
+      <div class="dialog-symbol danger">⚡</div>
+      <p class="eyebrow">Anti-relapse circuit breaker</p>
+      <h2 id="circuitTitle">Name what is happening.</h2>
+      <div id="circuitStart">
+        <div class="urge-options" id="urgeOptions">
+          <button type="button" data-urge="Gaming">Gaming</button>
+          <button type="button" data-urge="Alcohol">Alcohol</button>
+          <button type="button" data-urge="THC">THC</button>
+          <button type="button" data-urge="Medication">Medication</button>
+          <button type="button" data-urge="Other">Other</button>
+        </div>
+        <label class="range-label">Urge intensity <strong id="urgeBeforeValue">5</strong><input id="urgeBeforeInput" type="range" min="0" max="10" value="5"></label>
+        <label class="toggle-row inset"><span><strong>I already used or took something</strong><small>Opens the safety-first path</small></span><input id="alreadyUsedInput" type="checkbox"></label>
+        <button class="primary-button full" id="beginCircuitButton" type="button">Begin five-minute bridge</button>
+      </div>
+      <div id="circuitBridge" hidden>
+        <p class="circuit-instruction" id="circuitInstruction"></p>
+        <div class="timer-display" id="circuitTimer">05:00</div>
+        <div class="circuit-tools" id="circuitTools"></div>
+        <div class="contact-row">
+          <a class="secondary-button" href="tel:0800500333">Call IPčko</a>
+          <a class="secondary-button" href="tel:0800800566">Nezábudka</a>
+        </div>
+        <button class="primary-button full" id="finishCircuitButton" type="button">Re-rate the urge</button>
+      </div>
+      <div id="circuitReview" hidden>
+        <label class="range-label">Urge now <strong id="urgeAfterValue">5</strong><input id="urgeAfterInput" type="range" min="0" max="10" value="5"></label>
+        <label class="field-label">What helped or what is next?<textarea class="text-area" id="circuitNote" rows="3" maxlength="400"></textarea></label>
+        <button class="primary-button full" id="saveCircuitButton" type="button">Save and return</button>
+      </div>
+      <div id="circuitEmergency" hidden>
+        <p class="emergency-copy">If you may have taken a dangerous amount or combination, are severely intoxicated, cannot stay safe, or are unsure: do not complete a cognitive task. Contact a human now and do not drive.</p>
+        <div class="button-column">
+          <a class="danger-button full" href="tel:112">Call 112</a>
+          <a class="secondary-button full" href="tel:155">Call 155</a>
+          <a class="secondary-button full" href="tel:0800500333">Call IPčko</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="proofDialog">
+    <div class="dialog-card">
+      <button class="dialog-close" type="button" data-close="proofDialog" aria-label="Close">×</button>
+      <div class="dialog-symbol">◎</div>
+      <p class="eyebrow">Evidence check</p>
+      <h2 id="proofTaskTitle"></h2>
+      <p class="proof-rule" id="proofRule"></p>
+      <label class="file-drop">Choose screenshot<input id="proofFileInput" type="file" accept="image/*"></label>
+      <div class="proof-preview" id="proofPreview"></div>
+      <p class="settings-note">AI image verification will activate after the secure backend is connected. The preview currently supports self-verification without pretending an AI reviewed it.</p>
+      <button class="primary-button full" id="selfVerifyButton" type="button" disabled>Self-verify with attached proof</button>
+    </div>
+  </dialog>
+
+  <dialog id="challengeDialog">
+    <div class="dialog-card challenge-dialog-card">
+      <button class="dialog-close" type="button" data-close="challengeDialog" aria-label="Close">×</button>
+      <div class="dialog-symbol">⚔</div>
+      <p class="eyebrow">Adversarial Fuel Chamber</p>
+      <h2>Configure a private cue</h2>
+      <label class="field-label">Person/source alias<input class="text-input" id="cueSourceInput" maxlength="60" placeholder="The doubter"></label>
+      <label class="field-label">Exact or transformed phrase<textarea class="text-area" id="cueQuoteInput" rows="3" maxlength="280" placeholder="No speech. One completed action."></textarea></label>
+      <label class="field-label">Action line<input class="text-input" id="cueActionInput" maxlength="180" placeholder="The sentence that sends you into action"></label>
+      <label class="field-label">Allowed task category<select class="text-input" id="cueCategoryInput"><option>Work</option><option>Life</option><option>Home</option><option>Health — non-sensitive only</option></select></label>
+      <button class="primary-button full" id="saveCueButton" type="button">Save cue</button>
+      <div class="cue-list" id="cueList"></div>
+    </div>
+  </dialog>
+
+  <dialog id="pinDialog">
+    <div class="dialog-card compact-dialog">
+      <button class="dialog-close" type="button" data-close="pinDialog" aria-label="Close">×</button>
+      <p class="eyebrow">Privacy screen</p>
+      <h2>Set a local PIN</h2>
+      <p class="settings-note">This deters casual access in the preview; it is not database encryption.</p>
+      <input class="pin-input" id="newPinInput" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits">
+      <button class="primary-button full" id="savePinButton" type="button">Save PIN</button>
+      <p class="form-status" id="pinStatus"></p>
+    </div>
+  </dialog>
+
+  <dialog id="reactionDialog">
+    <div class="reaction-card">
+      <div class="reaction-emoji" id="reactionEmoji">⚡</div>
+      <h2 id="reactionTitle">Evidence recorded.</h2>
+      <p id="reactionText">No speech. The rep exists.</p>
+      <button class="primary-button" type="button" data-close="reactionDialog">Continue</button>
+    </div>
+  </dialog>
+
+  <dialog id="safetyDialog">
+    <div class="dialog-card">
+      <button class="dialog-close" type="button" data-close="safetyDialog" aria-label="Close">×</button>
+      <p class="eyebrow">Immediate safety</p>
+      <h2>Get a human involved.</h2>
+      <p>If you may act on thoughts of suicide or harm, cannot stay safe, or may have taken a dangerous substance or combination, call emergency help and do not stay alone.</p>
+      <div class="button-column">
+        <a class="danger-button full" href="tel:112">Emergency · 112</a>
+        <a class="secondary-button full" href="tel:155">Medical emergency · 155</a>
+        <a class="secondary-button full" href="tel:0800500333">IPčko · 0800 500 333</a>
+        <a class="secondary-button full" href="tel:0800800566">Nezábudka · 0800 800 566</a>
+      </div>
+      <p class="settings-note">Move away from means or substances, do not drive, and contact a trusted person who can be physically present.</p>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js?v=6"></script>
+
+    <div class="nr-xpzone"><div class="nr-xplabel" id="nrXpLabel">LV 1 · 0/100</div>
+      <div class="nr-xptrack"><div class="nr-xpfill" id="nrXpFill"></div><div class="nr-xpticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+    </div>
+    <div class="nr-ding" id="nrDing"><div class="big" id="nrDingLevel">LEVEL 2</div><div class="sub">DING.</div><div class="unlock" id="nrDingUnlock"></div></div>
+    <div class="nre-overlay" id="nrEmergencyOverlay">
+      <button class="nre-close" id="nrEmergencyClose" type="button">CLOSE ✕</button>
+      <div id="nrEmergencyContent"></div>
+    </div>
+    <script src="knowledge-data.js?v=1"></script>
+    <script src="ai.js?v=1"></script>
+    <script src="addons.js?v=2"></script>
+    <script src="companion.js?v=2"></script>
+    <script src="sync.js?v=1"></script>
+  </body>
+</html>

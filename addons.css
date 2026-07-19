@@ -1,0 +1,133 @@
+/* addons.css — final-version add-on layer (Knowledge, Diary, Emergency, Gamify, AI settings, desktop) */
+
+/* ===== Knowledge (Support view) ===== */
+.nrk-search { width: 100%; background: var(--panel-strong); border: 1px solid var(--line); color: var(--text);
+  border-radius: var(--radius-small); padding: 10px 14px; font-size: 14px; outline: none; margin-bottom: 10px; }
+.nrk-search:focus { border-color: var(--accent); }
+.nrk-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.nrk-chip { background: var(--panel-strong); border: 1px solid var(--line); color: var(--muted);
+  border-radius: 999px; padding: 6px 13px; font-size: 11px; font-weight: 600; letter-spacing: 0.6px; cursor: pointer; }
+.nrk-chip.active { color: var(--accent); border-color: var(--accent); }
+.nrk-lang { float: right; background: none; border: 1px solid var(--line); color: var(--muted);
+  border-radius: 999px; padding: 4px 10px; font-size: 10px; cursor: pointer; letter-spacing: 1px; }
+.nrk-list { display: flex; flex-direction: column; gap: 8px; }
+.nrk-card { background: var(--panel-strong); border-radius: var(--radius-small); border-left: 3px solid var(--line-strong); overflow: hidden; }
+.nrk-emergency { border-left-color: var(--danger); }
+.nrk-regulate, .nrk-reset { border-left-color: var(--accent); }
+.nrk-daily, .nrk-learn { border-left-color: var(--success); }
+.nrk-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 12px 14px; cursor: pointer; }
+.nrk-head strong { font-size: 13px; letter-spacing: 0.4px; }
+.nrk-head span { font-size: 9px; color: var(--faint); letter-spacing: 1px; white-space: nowrap; }
+.nrk-tag { padding: 0 14px 12px; margin: 0; font-size: 12px; color: var(--muted); line-height: 1.45; }
+.nrk-body { display: none; padding: 0 14px 14px; border-top: 1px solid var(--line); }
+.nrk-card.open .nrk-body { display: block; }
+.nrk-body ol { margin: 12px 0 0 18px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; line-height: 1.5; }
+.nrk-letter { margin-top: 12px; font-size: 13.5px; line-height: 1.65; white-space: pre-wrap; }
+.nrk-note { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 12px; line-height: 1.5;
+  background: rgba(80, 230, 255, 0.07); color: var(--accent); }
+.nrk-emergency .nrk-note { background: rgba(255, 93, 115, 0.08); color: var(--danger); }
+.nrk-src { margin-top: 10px; font-size: 10px; color: var(--faint); }
+
+/* ===== Emergency (Today button + overlay) ===== */
+.nre-btn { width: 100%; padding: 14px; border-radius: var(--radius-small); border: 1px solid var(--danger);
+  background: rgba(255, 93, 115, 0.08); color: var(--danger); font-size: 14px; font-weight: 700;
+  letter-spacing: 1px; text-align: center; cursor: pointer; margin-bottom: 14px; }
+.nre-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 90; display: none;
+  flex-direction: column; overflow-y: auto; padding: 22px 18px 34px; }
+.nre-overlay.open { display: flex; }
+.nre-overlay h2 { color: var(--danger); font-size: 17px; letter-spacing: 1px; margin: 0 0 14px; }
+.nre-close { align-self: flex-end; background: var(--panel-strong); border: 1px solid var(--line); color: var(--text);
+  border-radius: 999px; padding: 7px 15px; font-size: 12px; cursor: pointer; margin-bottom: 14px; }
+.nre-next { margin-top: 22px; width: 100%; padding: 13px; border: 1px solid var(--accent); color: var(--accent);
+  background: rgba(80, 230, 255, 0.06); border-radius: var(--radius-small); font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* ===== Diary ===== */
+.nrd-modes { display: flex; gap: 8px; margin-bottom: 12px; }
+.nrd-mode { flex: 1; padding: 10px; border-radius: var(--radius-small); font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; background: var(--panel-strong); color: var(--muted); border: 1px solid var(--line); cursor: pointer; }
+.nrd-mode.active { color: var(--accent); border-color: var(--accent); }
+.nrd-q { background: var(--panel-strong); border-radius: var(--radius-small); border-left: 3px solid var(--accent);
+  padding: 14px; margin-bottom: 10px; }
+.nrd-q h3 { margin: 4px 0 10px; font-size: 15px; line-height: 1.4; }
+.nrd-q textarea { width: 100%; background: var(--bg-soft); color: var(--text); border: 1px solid var(--line);
+  border-radius: 10px; padding: 10px; font-size: 14px; font-family: inherit; line-height: 1.5; resize: vertical; outline: none; }
+.nrd-q textarea:focus { border-color: var(--accent); }
+.nrd-fu { border-left-color: var(--stability-accent); }
+.nrd-hist { background: var(--panel-strong); border-radius: var(--radius-small); padding: 13px 15px; margin-bottom: 9px; cursor: pointer; }
+.nrd-preview { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.nrd-full { display: none; margin-top: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
+.nrd-hist.open .nrd-full { display: block; }
+.nrd-fq { font-size: 11px; color: var(--faint); margin: 8px 0 2px; }
+.nrd-fa { font-size: 13.5px; line-height: 1.5; margin: 0; white-space: pre-wrap; }
+.nrd-ai { margin-top: 14px; background: var(--panel-strong); border-left: 3px solid var(--success);
+  border-radius: var(--radius-small); padding: 14px; font-size: 13.5px; line-height: 1.6; }
+
+/* ===== Gamify (Progress) ===== */
+.nrg-stats { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.nrg-stats strong { color: var(--stability-accent); }
+.nrg-achs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
+.nrg-ach { background: var(--panel-strong); border: 1px solid var(--line); border-radius: var(--radius-small);
+  padding: 10px; font-size: 16px; opacity: 0.4; filter: grayscale(1); }
+.nrg-ach small { display: block; font-size: 9px; color: var(--muted); letter-spacing: 0.5px; margin-top: 4px; }
+.nrg-ach.got { opacity: 1; filter: none; border-color: var(--success); }
+.nrg-ach.got small { color: var(--success); }
+.nrg-abilities { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+.nrg-slot { aspect-ratio: 1; background: var(--panel-strong); border: 1px solid var(--line); border-radius: var(--radius-small);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  font-size: 18px; opacity: 0.4; filter: grayscale(1); text-align: center; }
+.nrg-slot small { font-size: 6.5px; color: var(--muted); letter-spacing: 0.4px; padding: 0 2px; }
+.nrg-slot.un { opacity: 1; filter: none; border-color: var(--success); }
+.nrg-slot.un small { color: var(--success); }
+
+/* ===== XP bar (pinned above bottom nav) ===== */
+.nr-xpzone { position: fixed; left: 0; right: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 40;
+  background: rgba(5, 8, 14, 0.94); border-top: 1px solid var(--line); padding: 3px 10px 5px; }
+.nr-xplabel { font-size: 9px; color: #b48aff; letter-spacing: 0.8px; font-weight: 700; padding-bottom: 2px; }
+.nr-xptrack { height: 10px; border-radius: 3px; background: #10141d; border: 1px solid rgba(150,180,210,0.2);
+  position: relative; overflow: hidden; }
+.nr-xpfill { height: 100%; width: 0%; background: linear-gradient(180deg, #c9a4ff, #8e5ce0);
+  transition: width 0.5s cubic-bezier(.22,1,.36,1); }
+.nr-xpfill.rested { background: linear-gradient(180deg, #b8ecff, #50b6e0); }
+.nr-xpticks { position: absolute; inset: 0; display: flex; pointer-events: none; }
+.nr-xpticks span { flex: 1; border-right: 1px solid rgba(0,0,0,0.5); }
+.nr-xpticks span:last-child { border-right: none; }
+body { padding-bottom: 26px; }
+
+/* ===== Level-up DING ===== */
+.nr-ding { position: fixed; inset: 0; z-index: 95; display: none; align-items: center; justify-content: center;
+  flex-direction: column; background: rgba(5, 8, 14, 0.9); text-align: center; }
+.nr-ding.show { display: flex; animation: nrfade 2.2s forwards; }
+.nr-ding .big { font-size: 46px; font-weight: 800; color: var(--success); text-shadow: 0 0 34px rgba(112,240,176,0.5); }
+.nr-ding .sub { font-size: 13px; letter-spacing: 2px; margin-top: 7px; color: var(--text); }
+.nr-ding .unlock { font-size: 12px; color: var(--accent); margin-top: 13px; }
+@keyframes nrfade { 0%, 75% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+
+/* ===== Desktop / laptop layout (D39 — same app, wide screen) ===== */
+@media (min-width: 900px) {
+  #appShell { max-width: 860px; margin: 0 auto; }
+  .nrd-q textarea { min-height: 110px; font-size: 15px; }
+  .nrg-abilities { grid-template-columns: repeat(10, 1fr); }
+  .nrk-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+  .nr-xpzone { max-width: 860px; margin: 0 auto; }
+}
+
+/* ===== Companion chat ===== */
+.nrc-personas { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 10px; }
+.nrc-persona { background: var(--panel-strong); border: 1px solid var(--line); color: var(--muted);
+  border-radius: 999px; padding: 6px 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; cursor: pointer; }
+.nrc-persona.active { color: var(--accent); border-color: var(--accent); }
+.nrc-thread { min-height: 260px; max-height: 46vh; overflow-y: auto; display: flex; flex-direction: column;
+  gap: 9px; padding: 12px; background: var(--panel-strong); border-radius: var(--radius-small); margin-bottom: 10px; }
+.nrc-msg { max-width: 85%; padding: 10px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.5; white-space: pre-wrap; }
+.nrc-msg.me { align-self: flex-end; background: rgba(80, 230, 255, 0.12); border: 1px solid rgba(80, 230, 255, 0.25); }
+.nrc-msg.ai { align-self: flex-start; background: var(--panel-light); border: 1px solid var(--line); }
+.nrc-inputrow { display: flex; gap: 8px; align-items: flex-end; }
+.nrc-inputrow textarea { flex: 1; background: var(--panel-strong); color: var(--text); border: 1px solid var(--line);
+  border-radius: var(--radius-small); padding: 10px 12px; font-size: 14px; font-family: inherit; resize: none; outline: none; }
+.nrc-inputrow textarea:focus { border-color: var(--accent); }
+.nrc-send { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--accent);
+  background: rgba(80, 230, 255, 0.12); color: var(--accent); font-size: 17px; cursor: pointer; flex-shrink: 0; }
+.nrc-toolrow { display: flex; gap: 8px; margin-top: 8px; }
+.nrc-toolrow .secondary-button { flex: 1; font-size: 11px; }
+@media (min-width: 900px) { .nrc-thread { max-height: 56vh; min-height: 380px; } }
