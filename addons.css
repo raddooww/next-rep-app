@@ -115,8 +115,15 @@ body { padding-bottom: 26px; }
   .nrd-q textarea { min-height: 170px; font-size: 15.5px; line-height: 1.5; }
   .nrg-abilities { grid-template-columns: repeat(10, 1fr); }
   .nrk-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
-  .nr-xpzone { max-width: 1040px; margin: 0 auto; }
   #nrDiaryFlow { max-width: 760px; margin: 0 auto; }
+
+  /* .nr-xpzone was a full-width (left:0;right:0) bar glued to the OLD full-width
+     bottom-nav's exact height. styles.css now turns that nav into a narrower
+     floating dock at bottom:18px, so the old full-width XP bar visually collided
+     with it instead of sitting cleanly above it. Make the XP bar match the dock's
+     width/centering and float above it with a real gap instead. */
+  .nr-xpzone { left: 50%; right: auto; bottom: 96px; transform: translateX(-50%);
+    width: min(92vw, 1040px); border-radius: 14px; border: 1px solid var(--line); }
 }
 
 /* ===== Companion chat ===== */
