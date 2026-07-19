@@ -510,7 +510,7 @@ dialog::backdrop { background: rgba(2,4,8,.8); backdrop-filter: blur(6px); }
    so desktop never actually widened. That rule now mirrors this file's value instead
    of setting its own — keep the two in sync if this number changes. */
 @media (min-width: 900px) {
-  .app-shell { width: min(100%, 1040px); padding-bottom: calc(160px + env(safe-area-inset-bottom)); }
+  .app-shell { width: min(100%, 1040px); padding-bottom: calc(210px + env(safe-area-inset-bottom)); }
   .app-content { padding-inline: 34px; }
   .app-header { padding-inline: 34px; }
 

@@ -122,7 +122,7 @@ body { padding-bottom: 26px; }
      floating dock at bottom:18px, so the old full-width XP bar visually collided
      with it instead of sitting cleanly above it. Make the XP bar match the dock's
      width/centering and float above it with a real gap instead. */
-  .nr-xpzone { left: 50%; right: auto; bottom: 96px; transform: translateX(-50%);
+  .nr-xpzone { left: 50%; right: auto; bottom: 150px; transform: translateX(-50%);
     width: min(92vw, 1040px); border-radius: 14px; border: 1px solid var(--line); }
 }
 

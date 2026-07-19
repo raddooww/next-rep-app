@@ -1,5 +1,5 @@
-const CACHE = "next-rep-final-v6";
-const ASSETS = ["./", "index.html", "styles.css?v=8", "addons.css?v=3", "app.js?v=7", "addons.js?v=2", "companion.js?v=2", "ai.js?v=1", "sync.js?v=1", "knowledge-data.js?v=1", "manifest.webmanifest", "icon.svg"];
+const CACHE = "next-rep-final-v7";
+const ASSETS = ["./", "index.html", "styles.css?v=9", "addons.css?v=4", "app.js?v=7", "addons.js?v=2", "companion.js?v=2", "ai.js?v=1", "sync.js?v=1", "knowledge-data.js?v=1", "manifest.webmanifest", "icon.svg"];
 
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
