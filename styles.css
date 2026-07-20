@@ -389,6 +389,11 @@ p { line-height: 1.48; }
 .anchor-streak-card .asc-stats { display: flex; align-items: center; gap: 13px; font-size: .68rem; color: var(--muted); flex-wrap: wrap; }
 .anchor-streak-card .asc-stats strong { color: var(--text); font-size: .85rem; }
 
+/* Arena shell. The v1 week-as-match styling was removed with its engine (D46/D50 rebuild);
+   arena v2's WoW-pane internals live in addons.css alongside the code that renders them.
+   This rule and the desktop max-width below stay here because the slot itself is EC-core DOM. */
+.arena-card { padding: 14px 16px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); margin-top: 10px; }
+
 .token-pips, .today-pip-group .token-pip { display: inline-flex; gap: 3px; }
 .today-pip-group { display: inline-flex; align-items: center; gap: 4px; margin-right: 10px; }
 .today-pip-group .week-dot { width: 7px; height: 7px; flex: none; }
@@ -525,7 +530,7 @@ dialog::backdrop { background: rgba(2,4,8,.8); backdrop-filter: blur(6px); }
   /* the hero + hardest-to-read single-column content stay at a comfortable reading
      width even though the shell is wide, instead of stretching lines edge to edge */
   .next-card, .review-panel, .plan-intro, .support-notes-panel { max-width: 760px; }
-  .progress-hero { max-width: 760px; }
+  .progress-hero, .arena-card { max-width: 760px; }
 
   /* bottom nav becomes a small floating dock instead of a bar stretched to 1040px */
   .bottom-nav {

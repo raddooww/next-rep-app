@@ -169,9 +169,13 @@ function loadState() {
       if (Array.isArray(legacy.reps)) defaults.anchors = legacy.reps.map((rep, index) => ({ ...anchorTemplate[index], ...rep, icon: anchorTemplate[index]?.icon || "◉" }));
     }
   } catch {
-    return defaults;
+    return normalizeState(defaults);
   }
-  return defaults;
+  // True fresh install (no saved, no legacy) must still pass through normalizeState() so
+  // one-time backfills like arenaSeasonStart (D45) run — createDefaults() alone can't set
+  // date-derived defaults since it has no access to weekKey()'s notion of "now" in a way
+  // that stays correct if this function is ever called before the rest of the script parses.
+  return normalizeState(defaults);
 }
 
 function normalizeState(value) {
@@ -188,6 +192,10 @@ function normalizeState(value) {
   value.circuitLogs ||= [];
   value.supportNotes ||= [];
   value.challengeCues ||= [];
+  // Arena v2 (D46/D50) owns its own state in the nr-final namespace (addons.js), so EC core
+  // no longer carries arenaSeasonStart / arenaLastCeremonyWeek. Those keys may still sit in
+  // saved snapshots from the v1 build; they are simply ignored (harmless, and dropping them
+  // here would fight the ...saved spread on every load for no gain).
   return value;
 }
 
@@ -342,19 +350,32 @@ function openRep(anchorId) {
   el("repDialog").showModal();
 }
 
-function completeRep() {
-  if (!activeAnchorId) return;
-  const anchor = state.anchors.find(item => item.id === activeAnchorId);
+// Shared completion path (D47 EASY/FULL): both the FULL timer flow (completeRep, below)
+// and EASY's one-tap log (addons.js) call this exact function, so recovery toast, rested
+// XP and reactions fire identically no matter which mode logged the rep — one code path,
+// no parallel bookkeeping. The nr:repCompleted dispatch lets the addon layer react (XP
+// hook, EASY view refresh) without this file needing to know either of them exists.
+function logAnchorCompletion(anchorId, mode) {
+  const anchor = state.anchors.find(item => item.id === anchorId);
+  if (!anchor) return;
   const todayKeyStr = localDateKey();
-  const recovery = isRecoveryMoment(activeAnchorId, todayKeyStr);
-  dayData().completions[activeAnchorId] = { mode: state.minimumMode ? "minimum" : "standard", minutes: state.minimumMode ? anchor.minimum : anchor.standard, at: new Date().toISOString() };
-  clearInterval(repTimerHandle);
-  el("repDialog").close();
-  activeAnchorId = null;
+  const recovery = isRecoveryMoment(anchorId, todayKeyStr);
+  dayData().completions[anchorId] = { mode, minutes: mode === "minimum" ? anchor.minimum : anchor.standard, at: new Date().toISOString() };
   saveState();
   render();
   showReaction("rep");
   if (recovery) toast("↻ Recovery recorded.");
+  document.dispatchEvent(new CustomEvent("nr:repCompleted", { detail: { anchorId, mode, recovery } }));
+}
+
+function completeRep() {
+  if (!activeAnchorId) return;
+  const anchorId = activeAnchorId;
+  const mode = state.minimumMode ? "minimum" : "standard";
+  clearInterval(repTimerHandle);
+  el("repDialog").close();
+  activeAnchorId = null;
+  logAnchorCompletion(anchorId, mode);
 }
 
 function updateTimer(target, seconds) {
@@ -566,6 +587,10 @@ function renderProgress() {
       </article>`;
     }).join("");
   }
+  // Arena v2 (D46/D50) lives in the addon layer and owns #arenaCard end to end. EC core only
+  // pokes it so the pane repaints in the same pass as the rest of Progress; if addons.js is
+  // absent the app degrades to "no arena card", never to a broken render.
+  window.NR_ARENA?.render();
   renderMetrics();
   el("weeklyReview").value = state.weeklyReviews[weekKey()] || "";
 }
@@ -657,6 +682,26 @@ function anchorStreak(anchorId) {
     cursor.setDate(cursor.getDate() - 7);
   }
   return streak;
+}
+
+// ---- Arena brackets (D45, carried into v2 unchanged per ARENA_V2_SPEC §7) ----
+// The v1 week-as-match engine (arenaReplay / arenaSeasonMondays / maybeFireArenaCeremony)
+// was removed in the D46+D50 rebuild; the ladder names survive it. The v2 engine lives in
+// addons.js and reads these two globals rather than duplicating the table.
+
+const ARENA_BRACKETS = [ // Rado's set, 2026-07-19 (WoW season order; Reckful at the top)
+  { floor: 2200, name: "RECKFUL" },
+  { floor: 2100, name: "WRATHFUL" },
+  { floor: 2000, name: "RELENTLESS" },
+  { floor: 1900, name: "FURIOUS" },
+  { floor: 1800, name: "DEADLY" },
+  { floor: 1700, name: "BRUTAL" },
+  { floor: 1600, name: "VENGEFUL" },
+  { floor: 1500, name: "MERCILESS" }
+];
+
+function arenaBracketName(rating) {
+  return (ARENA_BRACKETS.find(bracket => rating >= bracket.floor) || ARENA_BRACKETS.at(-1)).name;
 }
 
 function renderMetrics() {

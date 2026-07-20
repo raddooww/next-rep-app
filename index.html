@@ -7,8 +7,8 @@
   <meta name="description" content="Next Rep — one useful action, visible proof, safe restart.">
   <title>Next Rep</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=9">
-  <link rel="stylesheet" href="addons.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="addons.css?v=6">
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -22,6 +22,7 @@
         <h1 id="viewTitle">Today</h1>
       </div>
       <div class="header-actions">
+        <button class="easy-chip" id="modeToEasyBtn" type="button" aria-label="Switch to EASY mode">EASY</button>
         <button class="round-button" id="lockButton" type="button" aria-label="Lock app" hidden>⌁</button>
         <button class="round-button danger-ring" id="quickCircuitButton" type="button" aria-label="Open circuit breaker">⚡</button>
       </div>
@@ -117,6 +118,10 @@
           <p class="eyebrow">Abilities — new toys, unlocked by leveling (never health techniques)</p>
           <div class="nrg-abilities"></div>
         </div>
+        <!-- Arena v2 (D46 + D50) — rendered end to end by addons.js (window.NR_ARENA).
+             FULL-mode-only: explicit CSS gate in addons.css, body.easy-mode #arenaCard
+             { display:none }, kept independent of nav-reachability per D47 §5. -->
+        <div class="arena-card" id="arenaCard"></div>
         <div class="progress-hero">
           <div class="progress-ring" id="weeklyRing"><span id="weeklyPercent">0%</span><small>THIS WEEK</small></div>
           <div>
@@ -341,6 +346,21 @@
     </nav>
   </div>
 
+  <!-- EASY mode (D8/D47): a single screen — BAD MOMENT + the three anchors as any-order
+       one-tap targets + status line. Nothing else (no nav/tasks/checkpoint/loops/metrics/
+       arena/achievements/diary/knowledge). Lives outside .app-shell so the mode is a pure
+       body-class CSS toggle (addons.css) — zero EC-core surgery beyond the completion-path
+       call in app.js. -->
+  <div class="easy-shell" id="easyShell">
+    <header class="easy-header">
+      <span class="easy-eyebrow">NEXT REP · EASY</span>
+      <button class="easy-chip" id="modeToFullBtn" type="button" aria-label="Switch to FULL mode">FULL ⇄</button>
+    </header>
+    <button class="nre-btn" id="nrEmergencyBtnEasy" type="button">⬤ BAD MOMENT — TAP HERE</button>
+    <div class="easy-anchor-list" id="easyAnchorList"></div>
+    <p class="easy-status" id="easyStatus"></p>
+  </div>
+
   <div class="privacy-curtain" id="privacyCurtain" hidden>
     <div class="lock-mark">NR</div>
     <p class="eyebrow">Private space</p>
@@ -537,7 +557,7 @@
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=11"></script>
 
     <div class="nr-xpzone"><div class="nr-xplabel" id="nrXpLabel">LV 1 · 0/100</div>
       <div class="nr-xptrack"><div class="nr-xpfill" id="nrXpFill"></div><div class="nr-xpticks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
@@ -549,7 +569,7 @@
     </div>
     <script src="knowledge-data.js?v=1"></script>
     <script src="ai.js?v=1"></script>
-    <script src="addons.js?v=2"></script>
+    <script src="addons.js?v=4"></script>
     <script src="companion.js?v=2"></script>
     <script src="sync.js?v=1"></script>
   </body>

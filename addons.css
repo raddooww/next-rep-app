@@ -126,6 +126,57 @@ body { padding-bottom: 26px; }
     width: min(92vw, 1040px); border-radius: 14px; border: 1px solid var(--line); }
 }
 
+/* ===== EASY / FULL mode (D8/D47) ===== */
+.easy-chip { border: 1px solid var(--line); border-radius: 999px; background: rgba(0,0,0,.18); color: var(--muted);
+  padding: 6px 12px; font-size: .68rem; font-weight: 800; letter-spacing: .06em; cursor: pointer; }
+.easy-chip:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Whole FULL shell hides in EASY — a pure CSS view toggle, not a feature toggle. Mechanics
+   (XP, arena, tokens, streaks) keep running underneath; only the paint changes. */
+body.easy-mode .app-shell { display: none; }
+
+/* Explicit gate (D47 §5) — kept independent of "unreachable via nav" so it survives the
+   D46 arena v2 rebuild even if these elements ever move in the DOM. XP bar is exempt. */
+body.easy-mode #arenaCard,
+body.easy-mode #nrGamify { display: none !important; }
+
+.easy-shell { display: none; }
+body.easy-mode .easy-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(100%, 520px);
+  margin: 0 auto;
+  padding: calc(18px + env(safe-area-inset-top)) 18px calc(130px + env(safe-area-inset-bottom));
+  min-height: 100dvh;
+  position: relative;
+  z-index: 1;
+}
+.easy-header { display: flex; align-items: center; justify-content: space-between; }
+.easy-eyebrow { font-size: .68rem; font-weight: 800; letter-spacing: .12em; color: var(--muted); }
+.easy-anchor-list { display: flex; flex-direction: column; gap: 10px; }
+.easy-anchor-btn { display: flex; align-items: center; gap: 12px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius-small); padding: 16px 14px;
+  cursor: pointer; width: 100%; text-align: left; }
+.easy-anchor-btn:active { transform: scale(.985); }
+.easy-dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+.easy-anchor-copy { display: flex; flex-direction: column; gap: 2px; }
+.easy-anchor-copy strong { font-size: .95rem; }
+.easy-anchor-copy small { color: var(--muted); font-size: .68rem; }
+.easy-tap { margin-left: auto; font-size: .62rem; font-weight: 900; letter-spacing: .06em; color: var(--accent);
+  border: 1px solid var(--line); padding: 6px 10px; border-radius: 10px; flex: none; white-space: nowrap; }
+.easy-anchor-btn.done { opacity: .55; cursor: default; }
+.easy-anchor-btn.done .easy-tap { color: var(--muted); }
+.easy-status { text-align: center; color: var(--muted); font-size: .68rem; margin: 2px 0 0; }
+
+/* XP bar stays pinned in both modes (D47: exempt from the gate); in EASY there's no
+   bottom-nav to clear, so it sits closer to the edge instead of floating with a gap. */
+body.easy-mode .nr-xpzone { bottom: env(safe-area-inset-bottom, 0px); }
+@media (min-width: 900px) {
+  body.easy-mode .easy-shell { padding-top: 34px; }
+  body.easy-mode .nr-xpzone { bottom: 18px; }
+}
+
 /* ===== Companion chat ===== */
 .nrc-personas { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 10px; }
 .nrc-persona { background: var(--panel-strong); border: 1px solid var(--line); color: var(--muted);
@@ -145,3 +196,70 @@ body { padding-bottom: 26px; }
 .nrc-toolrow { display: flex; gap: 8px; margin-top: 8px; }
 .nrc-toolrow .secondary-button { flex: 1; font-size: 11px; }
 @media (min-width: 900px) { .nrc-thread { max-height: 56vh; min-height: 380px; } }
+
+/* ================= ARENA v2 (D46 + D50, ARENA_V2_SPEC §6) =================
+   WoW PvP-pane layout: lifetime header table, then four team cards. Canon constraints baked
+   into these rules: ratings ice-blue #85d8ff and wide enough for four digits without wrapping;
+   wins lime; losses and misses ALWAYS muted #99a38f — urgent red is reserved for real alerts
+   (D30/palette), so nothing in here may ever go red. */
+.arena-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.arena-link { background: none; border: 0; padding: 0; cursor: pointer; color: var(--muted);
+  font-size: .7rem; font-weight: 800; letter-spacing: .05em; }
+.arena-link:hover { color: var(--accent); }
+.arena-foot { margin-top: 12px; }
+
+.arena-header { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: .74rem; }
+.arena-header th { text-align: right; font-size: .62rem; font-weight: 800; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted); padding-bottom: 4px; }
+.arena-header th:first-child { text-align: left; }
+.arena-header td { text-align: right; padding: 3px 0; color: var(--text); font-weight: 700; }
+.arena-header td:first-child { text-align: left; color: var(--muted); font-weight: 600; }
+.arena-header .arena-lifetime { color: #d8ff52; font-weight: 900; }
+
+.arena-teams { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.arena-team { border-left: 3px solid var(--team); border-radius: 10px; background: rgba(0,0,0,.16);
+  padding: 10px 12px; }
+.arena-team-main { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.arena-team-copy { min-width: 0; }
+.arena-team-name { display: block; font-size: .78rem; font-weight: 900; letter-spacing: .04em;
+  color: var(--team); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arena-team-name span { font-weight: 500; color: var(--muted); letter-spacing: 0; }
+.arena-team-line { display: block; margin-top: 3px; font-size: .7rem; color: var(--muted); font-weight: 600; }
+.arena-team-rating { flex: none; text-align: right; min-width: 76px; }
+.arena-team-rating strong { display: block; font-size: 1.7rem; font-weight: 900; color: #85d8ff;
+  line-height: 1; white-space: nowrap; }
+.arena-team-rating small { display: block; margin-top: 2px; font-size: .6rem; font-weight: 800;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+
+.arena-log-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.arena-tier, .arena-habit { border: 1px solid var(--line); border-radius: 999px; background: rgba(0,0,0,.2);
+  color: var(--muted); padding: 5px 11px; font-size: .66rem; font-weight: 800; letter-spacing: .05em; cursor: pointer; }
+.arena-tier:hover, .arena-habit:hover { color: var(--team); border-color: var(--team); }
+.arena-habit.done { color: #d8ff52; border-color: rgba(216,255,82,.4); }
+
+.arena-sheet { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+.arena-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.arena-badge { border: 1px solid rgba(133,216,255,.35); border-radius: 8px; padding: 5px 9px;
+  font-size: .66rem; font-weight: 900; letter-spacing: .06em; color: #85d8ff; }
+.arena-badge small { display: block; font-weight: 500; letter-spacing: 0; color: var(--muted); font-size: .6rem; }
+.arena-season-block { margin-bottom: 10px; }
+.arena-season-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 5px 0;
+  font-size: .7rem; font-weight: 700; color: var(--muted); }
+.arena-season-row span:first-child { min-width: 108px; font-weight: 900; }
+.arena-r { color: #85d8ff; }
+.arena-reset-btn { margin-left: auto; background: none; border: 1px solid var(--line); border-radius: 999px;
+  color: var(--muted); font-size: .6rem; font-weight: 800; padding: 3px 8px; cursor: pointer; }
+.arena-reset-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+.arena-plan-row { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 6px 0; font-size: .7rem; font-weight: 900; letter-spacing: .04em; }
+.arena-plan-days { display: flex; gap: 4px; }
+.arena-day { width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--line);
+  background: rgba(0,0,0,.2); color: var(--muted); font-size: .62rem; font-weight: 800; cursor: pointer; }
+.arena-day.on { color: #090b09; background: #d8ff52; border-color: #d8ff52; }
+.arena-habit-edit { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 0 8px; }
+.arena-habit-tag { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--line);
+  border-radius: 999px; padding: 3px 8px; font-size: .64rem; color: var(--muted); }
+.arena-habit-tag button { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: .8rem; line-height: 1; }
+.arena-habit-add { background: none; border: 1px dashed var(--line); border-radius: 999px; color: var(--muted);
+  padding: 3px 9px; font-size: .64rem; font-weight: 800; cursor: pointer; }
